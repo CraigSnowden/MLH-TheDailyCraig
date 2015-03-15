@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/weather-icons/1.3.2/css/weather-icons.css">
+    <style>
+      .panel-primary > .panel-heading {
+        background-color: #000;
+      }
+
+      .panel-title {
+        font-size: 30px;
+      }
+
+      body {
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1><%= Time.now.strftime("%e %B %Y") %></h1>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">What's on today?</h3>
+      </div>
+      <ul class="list-group">
+      <%  @calendar.items.each do |item| %>
+        <li class="list-group-item" style="font-size: 20px;"><%= item.summary %> <span class="badge" style="font-size: 20px; background-color: #000;"><%= Time.parse(item.start.inspect).strftime("%l:%M%P") %> - <%= Time.parse(item.end.inspect).strftime("%l:%M%P") %></span></li>
+      <% end %>
+      </ul>
+    </div>
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Weather</h3>
+      </div>
+      <p>
+      <i style="font-size: 40px;" class="wi <%=
+      case @forecast.currently.icon
+      when "clear-day"
+        "wi-day-sunny"
+      when "clear-night"
+        "wi-night-clear"
+      when "rain"
+        "wi-rain"
+      when "snow"
+        "wi-snow"
+      when "sleet"
+        "wi-sleet"
+      when "wind"
+        "wi-windy"
+      when "fog"
+        "wi-fog"
+      when "cloudy"
+        "wi-day-cloudy"
+      when "partly-cloudy-day"
+        "wi-day-partly-cloudy"
+      when "partly-cloudy-night"
+        "wi-night-partly-cloudy"
+      end %>"></i>
+      <strong>Now</strong> <%= @forecast.currently.summary %>, <%= (@forecast.currently.temperature - 32) * (5/9) %>&deg;C.</p>
+      <% @forecast.hourly.data.take(8).each do |hour| %>
+      <p><i style="font-size: 40px;" class="wi <%=
+      case hour.icon
+      when "clear-day"
+        "wi-day-sunny"
+      when "clear-night"
+        "wi-night-clear"
+      when "rain"
+        "wi-rain"
+      when "snow"
+        "wi-snow"
+      when "sleet"
+        "wi-sleet"
+      when "wind"
+        "wi-windy"
+      when "fog"
+        "wi-fog"
+      when "cloudy"
+        "wi-day-cloudy"
+      when "partly-cloudy-day"
+        "wi-day-cloudy"
+      when "partly-cloudy-night"
+        "wi-night-partly-cloudy"
+      end %>"></i><strong><%= Time.at(hour.time).strftime("%l%P") %></strong> <%= hour.summary %>, <%= (hour.temperature - 32) * (5/9) %>&deg;C.</p>
+      <% end %>
+      </p>
+    </div>
+
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title"><img src="http://www.throup.org.uk/images/doctor_who/bbc_white.png" style="height: 20px;" /> News Headlines</h3>
+      </div>
+      <ul class="list-group">
+      <% @headlines.take(4).each do |item| %>
+        <li class="list-group-item" style="font-size: 20px;"><%= item.title %></li>
+      <% end %>
+      </ul>
+    </div>
+
+    <hr />
+  </body>
+</html>

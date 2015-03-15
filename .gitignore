@@ -1,0 +1,4 @@
+*.json
+.env
+*.png
+.DS_Store
